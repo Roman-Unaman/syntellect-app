@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { ChangeEvent, FC } from "react";
 import "./InputWithButtons.css";
 
 interface InputWithButtonsProps {
@@ -25,62 +25,38 @@ const InputWithButtons: FC<InputWithButtonsProps> = ({
   value,
   onChange,
 }) => {
-  const [_value, setValue] = useState("");
+  const renderButtons = (buttons: TButton[]): JSX.Element[] => {
+    return buttons.map((button, index) => {
+      return (
+        <button key={index} onClick={() => button.action?.()}>
+          {button.name || " "}
+        </button>
+      );
+    });
+  };
+  let leftButtons: TButton[] = [];
+  let rightButtons: TButton[] = [];
   if (buttons) {
     const tempButtonsArray = [...buttons];
-    const leftButtons = tempButtonsArray.filter(
+    leftButtons = tempButtonsArray.filter(
       (button: TButton) => button.location === Locations.LEFT
     );
-    const rightButtons = tempButtonsArray.filter(
+    rightButtons = tempButtonsArray.filter(
       (button: TButton) => button.location !== Locations.LEFT
     );
-
-    return (
-      <div className="container">
-        {leftButtons.map((button, index) => {
-          return (
-            <button key={index} onClick={() => button.action?.()}>
-              {button.name || " "}
-            </button>
-          );
-        })}
-        <input
-          value={value}
-          onChange={(e) => {
-            if (onChange) {
-              onChange(e);
-            } else {
-              setValue(e.target.value);
-            }
-          }}
-          placeholder={placeholder ? placeholder : ""}
-        />
-        {rightButtons.map((button, index) => {
-          return (
-            <button key={index} onClick={() => button.action?.()}>
-              {button.name || " "}
-            </button>
-          );
-        })}
-      </div>
-    );
-  } else {
-    return (
-      <div className="container">
-        <input
-          value={value || _value}
-          onChange={(e) => {
-            if (onChange) {
-              onChange(e);
-            } else {
-              setValue(e.target.value);
-            }
-          }}
-          placeholder={placeholder ? placeholder : ""}
-        />
-      </div>
-    );
   }
+
+  return (
+    <div className="container">
+      {leftButtons && renderButtons(leftButtons)}
+      <input
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder ? placeholder : ""}
+      />
+      {rightButtons && renderButtons(rightButtons)}
+    </div>
+  );
 };
 
 export default InputWithButtons;

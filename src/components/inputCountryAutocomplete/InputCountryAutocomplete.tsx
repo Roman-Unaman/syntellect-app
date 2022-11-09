@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useState } from "react";
 import { getCountryByName } from "../../api/apiService";
-import "./InputWithAutocomplete.css";
+import "./InputCountryAutocomplete.css";
 
 type TSuggestion = {
   name: string;
@@ -8,14 +8,14 @@ type TSuggestion = {
   flag: string;
 };
 
-interface InputWithAutocompleteProps {
+interface InputCountryAutocompleteProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   placeholder?: string;
   suggestionLimit?: number;
 }
 
-const InputWithAutocomplete: FC<InputWithAutocompleteProps> = ({
+const InputCountryAutocomplete: FC<InputCountryAutocompleteProps> = ({
   placeholder,
   onChange,
   suggestionLimit,
@@ -28,23 +28,21 @@ const InputWithAutocomplete: FC<InputWithAutocompleteProps> = ({
   const [userInput, setUserInput] = useState("");
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-    const userInput = e.currentTarget.value;
+    const inputValue = e.target.value;
     setShowSuggestions(true);
-    setUserInput(userInput);
-    if (typeof userInput === "string") {
-      const newFilteredSuggestions = await getCountryByName(userInput);
+    setUserInput(inputValue);
+    if (typeof inputValue === "string") {
+      const newFilteredSuggestions = await getCountryByName(inputValue);
       setFilteredSuggestions(newFilteredSuggestions);
     }
   };
-  // @ts-ignore
-  const onClick = (e) => {
+  const onClick = (e: React.MouseEvent<HTMLElement>) => {
     setUserInput(filteredSuggestions[activeSuggestionIndex].name);
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
   };
 
-  // @ts-ignore
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.keyCode === 13) {
       setUserInput(filteredSuggestions[activeSuggestionIndex].name);
       setShowSuggestions(false);
@@ -125,4 +123,4 @@ const InputWithAutocomplete: FC<InputWithAutocompleteProps> = ({
   );
 };
 
-export default InputWithAutocomplete;
+export default InputCountryAutocomplete;

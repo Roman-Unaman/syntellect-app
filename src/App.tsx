@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import "./App.css";
-import InputWithAutocomplete from "./components/InputWithAutocomplete/InputWithAutocomplete";
-import InputWithButtons, {
-  Locations,
-} from "./components/InputWithButtons/InputWithButtons";
+import "./assets/App.css";
+import InputCountryAutocomplete from "./components/inputCountryAutocomplete";
+import InputWithButtons from "./components/inputWithButtons";
+import { Locations } from "./components/inputWithButtons/InputWithButtons";
 
 function App() {
+  // Mobx не использовал, т.к. не вижу в нем необходимости
   const [firstInputValue, setFirstInputValue] = useState("");
   const [secondInputValue, setSecondInputValue] = useState("");
 
@@ -33,10 +33,7 @@ function App() {
             location: Locations.LEFT,
             name: "Alert number",
             action: () => {
-              if (
-                parseInt(secondInputValue) >= 0 ||
-                parseInt(secondInputValue) <= 0
-              ) {
+              if (secondInputValue && !isNaN(parseInt(secondInputValue))) {
                 alert(secondInputValue);
               } else {
                 alert("Введите число");
@@ -49,8 +46,8 @@ function App() {
           },
         ]}
       />
-      <InputWithAutocomplete suggestionLimit={3} />
-      <InputWithAutocomplete suggestionLimit={10} />
+      <InputCountryAutocomplete suggestionLimit={3} />
+      <InputCountryAutocomplete suggestionLimit={10} />
     </div>
   );
 }
